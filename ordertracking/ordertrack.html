@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipment Tracking</title>
+    <link rel="stylesheet" href="./ordertrack.css">
+    <script src="ordertrack.js" defer></script>
+</head>
+<body>
+    <div class="tracking-container">
+        <h1>Track Your Shipment</h1>
+        <div class="secondary-container">
+        <div class="input-group">
+            <label for="orderId">Order ID:</label>
+            <input type="text" id="orderId" name="orderId" placeholder="ORDER ID">
+        </div>
+        <div class="input-group">
+            <label for="awbId">AWB ID:</label>
+            <input type="text" id="awbId" name="awbId" placeholder="AWB ID">
+        </div>
+        <button id="trackButton" onClick=tracker()>Track</button>
+        <div id="loadingIndicator" class="hidden">Loading...</div>
+        <div id="errorMessage" class="hidden">Error: Invalid ID or tracking information not available.</div>
+        <div id="trackingInfo" class="hidden">
+            <!-- Tracking information will be displayed here -->
+        </div>
+    </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
