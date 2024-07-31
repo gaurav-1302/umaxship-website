@@ -1,42 +1,53 @@
 // script.js
 
 //document.getElementById('trackButton').addEventListener('click', function() {
-    function tracker() {
-        const orderId = document.getElementById('orderId').value;
-        const awbId = document.getElementById('awbId').value;
 
-        // Hide previous messages
-        document.getElementById('errorMessage').classList.add('d-none');
-        document.getElementById('trackingInfo').classList.add('d-none');
+function tracker() {
+    const orderId = document.getElementById('orderId').value.trim();
+    const awbId = document.getElementById('awbId').value.trim();
 
-        if (!orderId && !awbId) {
-            document.getElementById('errorMessage').textContent = "ERROR :: Please enter either Order ID or AWB ID.";
-            document.getElementById('errorMessage').classList.remove('d-none');
-            return;
-        }
+    // Hide previous messages
+    document.getElementById('errorMessage').classList.add('d-none');
+    document.getElementById('trackingInfo').classList.add('d-none');
 
-        // Show loading indicator
-        document.getElementById('loadingIndicator').classList.remove('d-none');
+    if (!orderId && !awbId) {
+        document.getElementById('errorMessage').textContent = "ERROR :: Please enter either Order ID or AWB ID.";
+        document.getElementById('errorMessage').classList.remove('d-none');
+        return;
+    }
 
-        // Simulate an API call to fetch tracking information
-        setTimeout(() => {
+    // Show loading indicator
+    document.getElementById('loadingIndicator').classList.remove('d-none');
+
+    // Construct the function URL with query parameters
+    const functionUrl = 'https://trackweborder-vjij5onvgq-uc.a.run.app'; // Replace with your function URL
+    const urlParams = new URLSearchParams({ orderId, awbId });
+    fetch(`${functionUrl}?${urlParams.toString()}`)
+        .then(response => response.json())
+        .then(data => {
             // Hide loading indicator
             document.getElementById('loadingIndicator').classList.add('d-none');
 
-            // Example response (replace with actual API call)
-            const response = {
-                status: 'true',
-            };
+            console.log(data);
 
-            if (response.status === 'true') {
+            if (data.status === 'success') {
                 const trackingInfoDiv = document.getElementById('trackingInfo');
                 trackingInfoDiv.innerHTML = `
-                    <p>[tracking data via api or database]</p>
-                `;
+                <p>Order Status: ${data.order.current_status}</p>
+                <p>AWB ID: ${data.order.awb_id}</p>
+                <!-- Add more order details as needed -->
+              `;
                 trackingInfoDiv.classList.remove('d-none');
             } else {
                 document.getElementById('errorMessage').textContent = "Error: Invalid ID or tracking information not available.";
                 document.getElementById('errorMessage').classList.remove('d-none');
             }
-        }, 2000); // Simulate network delay
-    }
+        })
+        .catch(error => {
+            console.error('Error fetching tracking info:', error);
+            document.getElementById('loadingIndicator').classList.add('d-none');
+            document.getElementById('errorMessage').textContent = "Error: Could not retrieve tracking information.";
+            document.getElementById('errorMessage').classList.remove('d-none');
+        });
+}
+
